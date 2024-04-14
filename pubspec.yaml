@@ -1,0 +1,33 @@
+name: flutter_record_magering_portal
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  bloc:
+  flutter_bloc: ^8.1.5
+  flutter_svg: ^2.0.10+1
+  web3dart: ^2.7.3
+  http: ^1.2.1
+  web_socket_channel: ^2.4.5
+
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - truffle-artifacts/
