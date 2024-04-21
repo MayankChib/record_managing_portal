@@ -1,5 +1,48 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
+/*
+    struct personalDetails {
+        string name;
+        string fatherName;
+        string dateOfBirth;
+        string gender;
+        string bloodType;
+        string mobileNumber;
+    }
+
+    struct personalSubDetails {
+        string pWd;
+        string category;
+        string Minority;
+        string materialStatus;
+        string identityType;
+        string identitynumber;
+    }
+
+    struct permanentAddressDetails {
+        string locality;
+        string state;
+        string city;
+        string district;
+        string pincode;
+    }
+
+    struct currentAddressDetails {
+        string locality;
+        string state;
+        string city;
+        string district;
+        string pincode;
+    }
+
+    struct workingDetails {
+        string occupation;
+        uint256 mobileNumber;
+        string state;
+        string city;
+    }
+
+*/
 
 contract TransactionStorageContract {
     event TransactionEventVariable(
@@ -10,29 +53,11 @@ contract TransactionStorageContract {
     );
 
     struct RecordStorageVariable {
-        string FirstName;
-        string LastName;
-        // string Gender;
-        // string BloodGroup;
-        // bool Divyangjan;
-        // string DivyangjanType;
-        // string Catergory;
-        // bool Minority;
-        // uint AadhaarNumber;
-        // uint PanCardNumber;
-        // string PrimaryOccupation;
-        // string CurrentAddress;
-        // string ContactAddress;
-        // uint ContactNumber;
-        // bool MartialStatus;
-        // string PermanentAddress;
-        // string State;
-        // string District;
-        // uint Block;
-        // string BusinessName;
-        // string BusinessAddress;
-        // string BusinessState;
-        // string BusinessPincode;
+        string personalDetails;
+        string personalSubDetails;
+        string permanentAddress;
+        string currentAddress;
+        string workingDetails;
     }
 
     struct TransactionVariables {
@@ -52,8 +77,11 @@ contract TransactionStorageContract {
 
     function TransactionEventEntryEdit(
         uint256 _UAN,
-        string memory _firstName,
-        string memory _lastName
+        string memory _personalDetails,
+        string memory _personalSubDetails,
+        string memory _permanentAddress,
+        string memory _currentAddress,
+        string memory _workingDetails
     ) public {
         bool found = false;
         for (uint256 i = 0; i < TransactionArray.length; i++) {
@@ -67,12 +95,18 @@ contract TransactionStorageContract {
             "Universal Account Number is not present in the database"
         );
         RecordDataConnector[_UAN] = RecordStorageVariable(
-            _firstName,
-            _lastName
+            _personalDetails,
+            _personalSubDetails,
+            _permanentAddress,
+            _currentAddress,
+            _workingDetails
         );
         RecordStorageVariable memory record = RecordStorageVariable(
-            _firstName,
-            _lastName
+            _personalDetails,
+            _personalSubDetails,
+            _permanentAddress,
+            _currentAddress,
+            _workingDetails
         );
         TransactionArray.push(
             TransactionVariables(msg.sender, block.timestamp, _UAN, record)
@@ -87,8 +121,11 @@ contract TransactionStorageContract {
 
     function TransactionEventEntry(
         uint256 _UAN,
-        string memory _firstName,
-        string memory _lastName
+        string memory _personalDetails,
+        string memory _personalSubDetails,
+        string memory _permanentAddress,
+        string memory _currentAddress,
+        string memory _workingDetails
     ) public {
         bool found = true;
         for (uint256 i = 0; i < TransactionArray.length; i++) {
@@ -103,12 +140,18 @@ contract TransactionStorageContract {
         );
 
         RecordDataConnector[_UAN] = RecordStorageVariable(
-            _firstName,
-            _lastName
+            _personalDetails,
+            _personalSubDetails,
+            _permanentAddress,
+            _currentAddress,
+            _workingDetails
         );
         RecordStorageVariable memory record = RecordStorageVariable(
-            _firstName,
-            _lastName
+            _personalDetails,
+            _personalSubDetails,
+            _permanentAddress,
+            _currentAddress,
+            _workingDetails
         );
         TransactionArray.push(
             TransactionVariables(msg.sender, block.timestamp, _UAN, record)
@@ -126,7 +169,16 @@ contract TransactionStorageContract {
     )
         public
         view
-        returns (address, uint256, uint256, string memory, string memory)
+        returns (
+            address,
+            uint256,
+            uint256,
+            string memory,
+            string memory,
+            string memory,
+            string memory,
+            string memory
+        )
     {
         require(_index < TransactionArray.length, "No Transactions Made");
         TransactionVariables memory transaction = TransactionArray[_index];
@@ -134,19 +186,35 @@ contract TransactionStorageContract {
             transaction.user,
             transaction.timestamp,
             transaction.UAN,
-            transaction.record.FirstName,
-            transaction.record.LastName
+            transaction.record.personalDetails,
+            transaction.record.personalSubDetails,
+            transaction.record.permanentAddress,
+            transaction.record.currentAddress,
+            transaction.record.workingDetails
         );
     }
 
     function FetchSpecificRecords(
         uint256 _UAN
-    ) public view returns (string memory, string memory) {
+    )
+        public
+        view
+        returns (
+            string memory,
+            string memory,
+            string memory,
+            string memory,
+            string memory
+        )
+    {
         for (uint256 i = TransactionArray.length - 1; i >= 0; i--) {
             if (TransactionArray[i].UAN == _UAN) {
                 return (
-                    TransactionArray[i].record.FirstName,
-                    TransactionArray[i].record.LastName
+                    TransactionArray[i].record.personalDetails,
+                    TransactionArray[i].record.personalSubDetails,
+                    TransactionArray[i].record.permanentAddress,
+                    TransactionArray[i].record.currentAddress,
+                    TransactionArray[i].record.workingDetails
                 );
             }
         }
@@ -161,23 +229,47 @@ contract TransactionStorageContract {
             uint256[] memory,
             uint256[] memory,
             string[] memory,
+            string[] memory,
+            string[] memory,
+            string[] memory,
             string[] memory
         )
     {
         address[] memory users = new address[](TransactionArray.length);
         uint256[] memory timestamps = new uint256[](TransactionArray.length);
         uint256[] memory UANs = new uint256[](TransactionArray.length);
-        string[] memory FirstNames = new string[](TransactionArray.length);
-        string[] memory LastNames = new string[](TransactionArray.length);
+        string[] memory PersonalDetails = new string[](TransactionArray.length);
+        string[] memory PersonalSubDetails = new string[](
+            TransactionArray.length
+        );
+        string[] memory PermanentAddress = new string[](
+            TransactionArray.length
+        );
+        string[] memory CurrentAddress = new string[](TransactionArray.length);
+        string[] memory WorkingDetails = new string[](TransactionArray.length);
 
         for (uint256 i = 0; i < TransactionArray.length; i++) {
             users[i] = TransactionArray[i].user;
             timestamps[i] = TransactionArray[i].timestamp;
             UANs[i] = TransactionArray[i].UAN;
-            FirstNames[i] = TransactionArray[i].record.FirstName;
-            LastNames[i] = TransactionArray[i].record.LastName;
+            PersonalDetails[i] = TransactionArray[i].record.personalDetails;
+            PersonalSubDetails[i] = TransactionArray[i]
+                .record
+                .personalSubDetails;
+            PermanentAddress[i] = TransactionArray[i].record.permanentAddress;
+            CurrentAddress[i] = TransactionArray[i].record.currentAddress;
+            WorkingDetails[i] = TransactionArray[i].record.workingDetails;
         }
 
-        return (users, timestamps, UANs, FirstNames, LastNames);
+        return (
+            users,
+            timestamps,
+            UANs,
+            PersonalDetails,
+            PersonalSubDetails,
+            PermanentAddress,
+            CurrentAddress,
+            WorkingDetails
+        );
     }
 }

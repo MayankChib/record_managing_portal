@@ -1,20 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_record_magering_portal/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:flutter_record_magering_portal/models/transaction_model.dart';
-import 'package:flutter_record_magering_portal/utils/colors.dart';
 
-class AddEntryPage extends StatefulWidget {
+class EditEntryPage extends StatefulWidget {
   final DashboardBloc dashboardBloc;
-  const AddEntryPage({Key? key, required this.dashboardBloc}) : super(key: key);
+  const EditEntryPage({Key? key, required this.dashboardBloc})
+      : super(key: key);
 
   @override
-  State<AddEntryPage> createState() => _AddEntryState();
+  State<EditEntryPage> createState() => _EditEntryState();
 }
 
-class _AddEntryState extends State<AddEntryPage> {
+class _EditEntryState extends State<EditEntryPage> {
   final TextEditingController uanController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -110,21 +108,20 @@ class _AddEntryState extends State<AddEntryPage> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: AppColors.entryPageAccents,
-        appBar: AppBar(title: const Text("Add Entry")),
+        appBar: AppBar(title: const Text("Edit Entry")),
         body: BlocConsumer<DashboardBloc, DashboardState>(
           bloc: widget.dashboardBloc,
           listener: (context, state) {
-            if (state is EntrySuccessState) {
+            if (state is EditSuccessState) {
               _showSuccessDialog(context);
             }
-            if (state is EntryErrorState) {
-              _showErrorDialog(context, state.errorMessage.substring(86, 145));
+            if (state is EditErrorState) {
+              _showErrorDialog(context, state.errorMessage.substring(86, 141));
             }
           },
           builder: (context, state) {
             return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              margin: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   Container(
@@ -720,7 +717,7 @@ class _AddEntryState extends State<AddEntryPage> {
                         workingDetails =
                             "Occupation: ${workingoccupationController.text}; MobileNumber: ${workingmobileNumberController.text}; State: ${workingstateController.text}; City: ${workingcityController.text};";
                         // Add Entry logic
-                        widget.dashboardBloc.add(DashBoardAddEntry(
+                        widget.dashboardBloc.add(DashBoardEditEntry(
                           transactionModel: TransactionModel(
                               "",
                               DateTime.now(),
@@ -733,24 +730,21 @@ class _AddEntryState extends State<AddEntryPage> {
                         ));
                       }
                     },
-                    child: Align(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      child: Container(
-                        width: 150,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 2),
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Submit",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    child: Container(
+                      width: 150,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 2),
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Submit",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),

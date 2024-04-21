@@ -4,6 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_record_magering_portal/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:flutter_record_magering_portal/features/entry/addentry_page.dart';
+import 'package:flutter_record_magering_portal/features/entry/editentry_page.dart';
+import 'package:flutter_record_magering_portal/features/search/accountsearch_page.dart';
+import 'package:flutter_record_magering_portal/features/search/transactionsearch_page.dart';
 import 'package:flutter_record_magering_portal/utils/colors.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -15,6 +18,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   final DashboardBloc dashboardBloc = DashboardBloc();
+  static const IconData history = IconData(0xe314, fontFamily: 'MaterialIcons');
 
   @override
   void initState() {
@@ -88,61 +92,59 @@ class _DashboardPageState extends State<DashboardPage> {
                             const SizedBox(width: 10),
                             //edit entry
                             Expanded(
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: AppColors.buttonAccents,
+                              child: InkWell(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditEntryPage(
+                                            dashboardBloc: dashboardBloc,
+                                          )),
                                 ),
-                                child: const Center(
-                                  child: Text(
-                                    "Edit Entry",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: AppColors.buttonAccents,
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      "Edit Entry",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            //Add Owners
-                            Expanded(
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: AppColors.buttonAccents,
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    "Transaction",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+
                             const SizedBox(width: 10),
                             //Fetch Account
                             Expanded(
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: AppColors.buttonAccents,
+                              child: InkWell(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AccountSeachpage(
+                                            dashboardBloc: dashboardBloc,
+                                          )),
                                 ),
-                                child: const Center(
-                                  child: Text(
-                                    "Account",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: AppColors.buttonAccents,
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      "Search",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -153,64 +155,93 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       //show all the transactions made
                       const SizedBox(height: 20),
-                      const Text(
-                        "Transactions",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+
+                      const Row(
+                        children: [
+                          Icon(history),
+                          SizedBox(width: 5),
+                          Text(
+                            "History",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 20),
                       Expanded(
-                          child: ListView.builder(
-                        itemCount: successState.transactions.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 6),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 12),
-                            decoration: BoxDecoration(
+                        child: ListView.builder(
+                          itemCount: successState.transactions.length,
+                          itemBuilder: (context, index) {
+                            final reversedIndex =
+                                successState.transactions.length - 1 - index;
+                            final transaction =
+                                successState.transactions[reversedIndex];
+
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 12),
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
-                                color: Colors.white),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                                color: Colors.white,
+                              ),
+                              child: InkWell(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        TransactionDetailsPage(
+                                      transaction: transaction,
+                                      dashboardBloc: dashboardBloc,
+                                      transactionNumber: reversedIndex + 1,
+                                    ),
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            "Transaction number: ${reversedIndex + 1}"),
+                                        Text(
+                                            'Date: ${transaction.timestamp.toString().substring(0, 11)}')
+                                      ],
+                                    ),
                                     Text(
-                                      successState.transactions[index].UAN
-                                          .toString(),
-                                      style: TextStyle(
-                                          fontSize: 20,
+                                      "Account: ${transaction.address}",
+                                      style: const TextStyle(
+                                          fontSize: 16,
                                           fontWeight: FontWeight.bold),
-                                    )
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Labour Account Number: ${transaction.UAN}",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        Text(
+                                            'Time: ${transaction.timestamp.toString().substring(11, 19)}')
+                                      ],
+                                    ),
                                   ],
                                 ),
-                                Text(
-                                  successState.transactions[index].address,
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                Text(
-                                  successState.transactions[index].timestamp
-                                      .timeZoneName,
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                Text(
-                                  successState.transactions[index].firstname,
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                Text(
-                                  successState.transactions[index].lastname,
-                                  style: TextStyle(fontSize: 16),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ))
+                              ),
+                            );
+                          },
+                        ),
+                      )
                     ],
                   ),
                 );
               default:
-                return SizedBox();
+                return const SizedBox();
             }
           },
         ));

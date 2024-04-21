@@ -4,9 +4,20 @@ class TransactionModel {
   final String address;
   final DateTime timestamp;
   final int UAN;
-  final String firstname;
-  final String lastname;
+  final String personalDetails;
+  final String personalSubDetails;
+  final String permanentAddress;
+  final String currentAddress;
+  final String workingDetails;
 
   TransactionModel(
-      this.address, this.timestamp, this.UAN, this.firstname, this.lastname);
+    this.address,
+    this.timestamp,
+    this.UAN,
+    this.personalDetails,
+    this.personalSubDetails,
+    this.permanentAddress,
+    this.currentAddress,
+    this.workingDetails,
+  );
 }
