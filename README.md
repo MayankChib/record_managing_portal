@@ -1,5 +1,6 @@
 # record_managing_portal
 
+<<<<<<< HEAD
 A new Flutter project.
 
 ## Getting Started
@@ -25,3 +26,6 @@ copy the private key
 contract address
 
 truffle migrate --reset
+=======
+working
+>>>>>>> 9a59e00b1e0fb723d26d97f6506de2bff283563f
